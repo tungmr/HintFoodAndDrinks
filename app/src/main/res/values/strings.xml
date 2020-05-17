@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HintFoodAndDrinks</string>
+    <string name="app_name">Hint Food And Drinks</string>
 
     <string name="title">Hint Food and Drinks</string>
     <string name="email">Email</string>
@@ -24,5 +24,20 @@
     <string name="menu_slideshow">Slideshow</string>
 
     <string name="home_second">Home Second</string>
+
+    <string name="sign_out">Sign out</string>
+    <string name="profile">Profile</string>
+
+    <string name="home">Home page</string>
+
+    <string name="please_fill_all">Please fill in all fields</string>
+    <string name="password_not_match">Password did not match</string>
+    <string name="occurred">An error occurred, please try again</string>
+    <string name="sign_up_success">Sign up successfully</string>
+    <string name="email_existed">Email existed</string>
+    <string name="login_success">Login successfully</string>
+    <string name="incorrect_info_login">Incorrect login information</string>
+
+
 
 </resources>

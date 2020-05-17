@@ -1,4 +1,4 @@
-package com.tungmr.hintfoodanddrinks.bean;
+package com.tungmr.hintfoodanddrinks.model;
 
 import java.io.Serializable;
 
@@ -9,6 +9,12 @@ public class User implements Serializable {
     private String password;
 
     public User() {
+    }
+
+    public User(String email, String name, String password) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
     }
 
     public String getEmail() {

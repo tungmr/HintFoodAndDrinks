@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.tungmr.hintfoodanddrinks.R;
-import com.tungmr.hintfoodanddrinks.db.DatabaseAccess;
 import com.tungmr.hintfoodanddrinks.db.DatabaseHelper;
 import com.tungmr.hintfoodanddrinks.db.LoginDBHelper;
 
@@ -56,17 +55,17 @@ public class LoginActivity extends AppCompatActivity {
                 String password = passwordEdt.getText().toString().trim();
 
                 if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Please enter all field", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.please_fill_all, Toast.LENGTH_LONG).show();
                 } else {
                     LoginDBHelper loginDBHelper = LoginDBHelper.getInstance(getApplicationContext());
                     loginDBHelper.open();
                     boolean check = loginDBHelper.checkUser(email, password);
                     if (check) {
-                        Toast.makeText(getApplicationContext(), "Login successfully", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.login_success, Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(getApplicationContext(), "Incorrect login information", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.incorrect_info_login, Toast.LENGTH_LONG).show();
 
                     }
 

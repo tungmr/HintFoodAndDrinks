@@ -9,6 +9,9 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.tungmr.hintfoodanddrinks.model.User;
+import com.tungmr.hintfoodanddrinks.security.SHAHashing;
+
 public class LoginDBHelper extends DatabaseAccess  {
 
     private static LoginDBHelper instance;
@@ -33,11 +36,11 @@ public class LoginDBHelper extends DatabaseAccess  {
     }
 
 
-    public boolean insertUser(String email, String name, String password) {
+    public boolean insertUser(User user) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("email", email);
-        contentValues.put("name", name);
-        contentValues.put("password", password);
+        contentValues.put("email", user.getEmail());
+        contentValues.put("name", user.getName());
+        contentValues.put("password", SHAHashing.getSHAHash(user.getPassword()));
         long ins = sqLiteDatabase.insert("user", null, contentValues);
         return ins != -1;
     }
@@ -48,7 +51,8 @@ public class LoginDBHelper extends DatabaseAccess  {
     }
 
     public boolean checkUser(String email, String password) {
-        cursor = sqLiteDatabase.query(TABLE_USER, new String[]{COLUMN_EMAIL, COLUMN_NAME, COLUMN_PASSWORD}, COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=?", new String[]{email, password}, null, null, null);
+        String passwordHash = SHAHashing.getSHAHash(password);
+        cursor = sqLiteDatabase.query(TABLE_USER, new String[]{COLUMN_EMAIL, COLUMN_NAME, COLUMN_PASSWORD}, COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=?", new String[]{email, passwordHash}, null, null, null);
         return cursor.getCount() > 0;
     }
 }
