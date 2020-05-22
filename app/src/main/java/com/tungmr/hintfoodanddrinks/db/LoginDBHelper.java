@@ -9,20 +9,14 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.tungmr.hintfoodanddrinks.constants.CoreConstants;
 import com.tungmr.hintfoodanddrinks.model.User;
 import com.tungmr.hintfoodanddrinks.security.SHAHashing;
 
-public class LoginDBHelper extends DatabaseAccess  {
+public class LoginDBHelper extends DatabaseAccess {
 
     private static LoginDBHelper instance;
 
-    private static final String TAG = "SQLite";
-
-    private static final String TABLE_USER = "user";
-
-    private static final String COLUMN_EMAIL = "email";
-    private static final String COLUMN_PASSWORD = "password";
-    private static final String COLUMN_NAME = "name";
 
     public LoginDBHelper(Context context) {
         super(context);
@@ -46,13 +40,41 @@ public class LoginDBHelper extends DatabaseAccess  {
     }
 
     public boolean checkEmailExisted(String email) {
-        cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE_USER + " WHERE " + COLUMN_EMAIL + " = ?", new String[]{email});
+        cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + CoreConstants.TABLE_USER + " WHERE " + CoreConstants.TABLE_USER_COLUMN_EMAIL + " = ?", new String[]{email});
         return cursor.getCount() > 0;
     }
 
-    public boolean checkUser(String email, String password) {
+    public User checkUser(String email, String password) {
+        User user = new User();
         String passwordHash = SHAHashing.getSHAHash(password);
-        cursor = sqLiteDatabase.query(TABLE_USER, new String[]{COLUMN_EMAIL, COLUMN_NAME, COLUMN_PASSWORD}, COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=?", new String[]{email, passwordHash}, null, null, null);
-        return cursor.getCount() > 0;
+        String sql = "SELECT * FROM " + CoreConstants.TABLE_USER + " WHERE " + CoreConstants.TABLE_USER_COLUMN_EMAIL + "=? AND " + CoreConstants.TABLE_USER_COLUMN_PASSWORD + "=? ";
+        cursor = sqLiteDatabase.rawQuery(sql, new String[]{email, passwordHash});
+        while (cursor.moveToNext()) {
+            user.setEmail(cursor.getString(0));
+            user.setName(cursor.getString(1));
+            user.setPassword(cursor.getString(2));
+        }
+        return user;
+    }
+
+    public User findUserByEmail(String email) {
+        User user = new User();
+        String sql = "SELECT * FROM " + CoreConstants.TABLE_USER + " WHERE " + CoreConstants.TABLE_USER_COLUMN_EMAIL + "=? ";
+        cursor = sqLiteDatabase.rawQuery(sql, new String[]{email});
+        while (cursor.moveToNext()) {
+            user.setEmail(cursor.getString(0));
+            user.setName(cursor.getString(1));
+            user.setPassword(cursor.getString(2));
+        }
+        return user;
+    }
+
+    public boolean editUser(User user) {
+        ContentValues cv = new ContentValues();
+        cv.put(CoreConstants.TABLE_USER_COLUMN_NAME, user.getName());
+        cv.put(CoreConstants.TABLE_USER_COLUMN_PASSWORD, user.getPassword());
+        long ins = sqLiteDatabase.update(CoreConstants.TABLE_USER, cv, CoreConstants.TABLE_USER_COLUMN_EMAIL + "=?", new String[]{user.getEmail()});
+        return ins != -1;
+
     }
 }

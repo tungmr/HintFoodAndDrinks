@@ -19,14 +19,14 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:layout_gravity="center"
-
+        android:id="@+id/navNameInfo"
         android:text="Some text here"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_gravity="center"
-
+        android:id="@+id/navEmail"
         android:layout_height="wrap_content"
         android:text="infor@tungmr.com" />
 

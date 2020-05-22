@@ -4,6 +4,7 @@ public class Category {
 
     private Long categoryId;
     private String categoryName;
+    private String mainText;
     private String introductionText;
 
     public Long getCategoryId() {
@@ -20,6 +21,14 @@ public class Category {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public String getMainText() {
+        return mainText;
+    }
+
+    public void setMainText(String mainText) {
+        this.mainText = mainText;
     }
 
     public String getIntroductionText() {

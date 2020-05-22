@@ -1,19 +1,24 @@
 package com.tungmr.hintfoodanddrinks.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.tungmr.hintfoodanddrinks.R;
 import com.tungmr.hintfoodanddrinks.db.DatabaseHelper;
 import com.tungmr.hintfoodanddrinks.db.LoginDBHelper;
+import com.tungmr.hintfoodanddrinks.model.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -22,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordEdt, emailEdt;
     private Button signIn;
     private TextView signUp;
+    String nameUser, emailUser, pHashUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,8 +65,15 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     LoginDBHelper loginDBHelper = LoginDBHelper.getInstance(getApplicationContext());
                     loginDBHelper.open();
-                    boolean check = loginDBHelper.checkUser(email, password);
-                    if (check) {
+                    User checkUser = loginDBHelper.checkUser(email, password);
+                    if (checkUser.getEmail() != null) {
+
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString(getString(R.string.usernameKey), checkUser.getName());
+                        editor.putString(getString(R.string.emailKey), checkUser.getEmail());
+                        editor.commit();
+
                         Toast.makeText(getApplicationContext(), R.string.login_success, Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                         startActivity(intent);

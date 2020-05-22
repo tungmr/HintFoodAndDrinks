@@ -27,6 +27,7 @@
 
     <string name="sign_out">Sign out</string>
     <string name="profile">Profile</string>
+    <string name="change_password">Change password</string>
 
     <string name="home">Home page</string>
 
@@ -37,7 +38,22 @@
     <string name="email_existed">Email existed</string>
     <string name="login_success">Login successfully</string>
     <string name="incorrect_info_login">Incorrect login information</string>
+    <string name="preference_file_key">com.tungmr.hintfoodandrinks</string>
 
+    <string name="usernameKey">username</string>
+    <string name="emailKey">email</string>
+
+
+<!--    change password-->
+    <string name="user_profile">User profile</string>
+
+    <string name="old_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="new_rePassword">Confirm new password</string>
+    <string name="confirm">CONFIRM</string>
+    <string name="back">BACK</string>
+    <string name="password_invalid">Current password is incorrect</string>
+    <string name="change_password_successfully">Password was changed</string>
 
 
 </resources>
