@@ -32,10 +32,11 @@ public class LoginDBHelper extends DatabaseAccess {
 
     public boolean insertUser(User user) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("email", user.getEmail());
-        contentValues.put("name", user.getName());
-        contentValues.put("password", SHAHashing.getSHAHash(user.getPassword()));
-        long ins = sqLiteDatabase.insert("user", null, contentValues);
+        contentValues.put(CoreConstants.TABLE_USER_COLUMN_EMAIL, user.getEmail());
+        contentValues.put(CoreConstants.TABLE_USER_COLUMN_NAME, user.getName());
+        contentValues.put(CoreConstants.TABLE_USER_COLUMN_PASSWORD, SHAHashing.getSHAHash(user.getPassword()));
+        contentValues.put(CoreConstants.TABLE_USER_COLUMN_ROLE, CoreConstants.ROLE_USER);
+        long ins = sqLiteDatabase.insert(CoreConstants.TABLE_USER, null, contentValues);
         return ins != -1;
     }
 
@@ -53,6 +54,7 @@ public class LoginDBHelper extends DatabaseAccess {
             user.setEmail(cursor.getString(0));
             user.setName(cursor.getString(1));
             user.setPassword(cursor.getString(2));
+            user.setRole(cursor.getString(3));
         }
         return user;
     }
@@ -65,6 +67,7 @@ public class LoginDBHelper extends DatabaseAccess {
             user.setEmail(cursor.getString(0));
             user.setName(cursor.getString(1));
             user.setPassword(cursor.getString(2));
+            user.setRole(cursor.getString(3));
         }
         return user;
     }

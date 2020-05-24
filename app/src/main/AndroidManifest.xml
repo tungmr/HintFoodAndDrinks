@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tungmr.hintfoodanddrinks">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
@@ -10,7 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.ChangePassword"></activity>
+        <activity android:name=".activities.AdminViewMeal"></activity>
+        <activity android:name=".activities.AddMealActivity" />
+        <activity android:name=".activities.AdminActivity" />
+        <activity android:name=".activities.MealActivity" />
+        <activity android:name=".activities.ChangePassword" />
         <activity
             android:name=".activities.SignUpActivity"
             android:theme="@style/HiddenTitleTheme" />

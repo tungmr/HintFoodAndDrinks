@@ -44,7 +44,7 @@
     <string name="emailKey">email</string>
 
 
-<!--    change password-->
+    <!--    change password-->
     <string name="user_profile">User profile</string>
 
     <string name="old_password">Current password</string>
@@ -54,6 +54,19 @@
     <string name="back">BACK</string>
     <string name="password_invalid">Current password is incorrect</string>
     <string name="change_password_successfully">Password was changed</string>
+
+    <!--    admin-->
+    <string name="management">APP MANAGEMENT</string>
+    <string name="up_meal">Add Meal</string>
+    <string name="view_meal">View Meal</string>
+    <string name="add">Add</string>
+    <string name="meal_name">Meal\'s name</string>
+    <string name="meal_des">Description</string>
+    <string name="category">Category</string>
+    <string name="status">Status</string>
+    <string name="meal_image">Image</string>
+    <string name="choose_image">Choose an image</string>
+    <string name="list_meal">List Meals</string>
 
 
 </resources>

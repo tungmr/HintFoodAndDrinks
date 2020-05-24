@@ -1,5 +1,7 @@
 package com.tungmr.hintfoodanddrinks.model;
 
+import android.graphics.Bitmap;
+
 import java.util.List;
 
 public class Meal {
@@ -8,7 +10,22 @@ public class Meal {
     private String name;
     private String description;
     private Category category;
-    private List<FoodOrDrink> foodOrDrinks;
+    private Bitmap image;
+    private Integer status;
+    private String categoryName;
+    private byte[] imageArray;
+
+    public Meal() {
+    }
+
+    public Meal(String name, String description, Integer status, String categoryName, byte[] imageArray) {
+        this.name = name;
+        this.description = description;
+
+        this.status = status;
+        this.categoryName = categoryName;
+        this.imageArray = imageArray;
+    }
 
     public Long getMealId() {
         return mealId;
@@ -34,11 +51,43 @@ public class Meal {
         this.description = description;
     }
 
-    public List<FoodOrDrink> getFoodOrDrinks() {
-        return foodOrDrinks;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setFoodOrDrinks(List<FoodOrDrink> foodOrDrinks) {
-        this.foodOrDrinks = foodOrDrinks;
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public byte[] getImageArray() {
+        return imageArray;
+    }
+
+    public void setImageArray(byte[] imageArray) {
+        this.imageArray = imageArray;
     }
 }

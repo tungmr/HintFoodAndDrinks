@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.tungmr.hintfoodanddrinks.R;
+import com.tungmr.hintfoodanddrinks.constants.CoreConstants;
 import com.tungmr.hintfoodanddrinks.db.DatabaseHelper;
 import com.tungmr.hintfoodanddrinks.db.LoginDBHelper;
 import com.tungmr.hintfoodanddrinks.model.User;
@@ -73,10 +74,15 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString(getString(R.string.usernameKey), checkUser.getName());
                         editor.putString(getString(R.string.emailKey), checkUser.getEmail());
                         editor.commit();
-
                         Toast.makeText(getApplicationContext(), R.string.login_success, Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                        startActivity(intent);
+
+                        if (checkUser.getRole().equals(CoreConstants.ROLE_USER)) {
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                            startActivity(intent);
+                        }
                     } else {
                         Toast.makeText(getApplicationContext(), R.string.incorrect_info_login, Toast.LENGTH_LONG).show();
 
