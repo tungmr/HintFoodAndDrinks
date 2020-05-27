@@ -4,13 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,23 +24,22 @@ import android.widget.Toast;
 import com.tungmr.hintfoodanddrinks.R;
 import com.tungmr.hintfoodanddrinks.db.CategoryDBHelper;
 import com.tungmr.hintfoodanddrinks.db.MealDBHelper;
-import com.tungmr.hintfoodanddrinks.model.Category;
 import com.tungmr.hintfoodanddrinks.model.Meal;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddMealActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class ViewAMeal extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
-    private Button chooseImage, add, back;
+
+    private Button chooseImage, save, back;
     private ImageView imageView;
 
     private static final int IMAGE_PICK_CODE = 1000;
     private static final int PERMISSION_CODE = 1001;
 
-    private byte[] imageAdd;
+    private byte[] imageSave;
 
     private EditText edMealName, edMealDes;
     private Spinner spinnerCategory;
@@ -49,31 +48,36 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
     private List<String> categoriesName;
 
     private String categoryChoose;
+    private MealDBHelper mealDBHelper;
 
+    private Meal mealEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_meal);
-
+        setContentView(R.layout.activity_view_a_meal);
         setControl();
-        setValue();
+        setValueForSpinner();
+        setValueForMeal();
         setEvent();
-
     }
 
-    private void setControl() {
-        edMealName = findViewById(R.id.editTextMealName);
-        edMealDes = findViewById(R.id.editTextMealDes);
-        chooseImage = findViewById(R.id.buttonChooseAnImage);
-        imageView = findViewById(R.id.imageViewAfterChooseImage);
-        add = findViewById(R.id.buttonAddNewMeal);
-        back = findViewById(R.id.buttonAddMealBack);
-        spinnerCategory = findViewById(R.id.spinnerCategory);
-        status = findViewById(R.id.switchStatus);
+
+
+    private void setControl(){
+        mealDBHelper = MealDBHelper.getInstance(getApplicationContext());
+        mealDBHelper.open();
+        edMealName = findViewById(R.id.editTextMealNameDetail);
+        edMealDes = findViewById(R.id.editTextMealDesDetail);
+        chooseImage = findViewById(R.id.buttonChooseAnImageDetail);
+        imageView = findViewById(R.id.imageViewAfterChooseImageDetail);
+        save = findViewById(R.id.buttonSaveMealDetail);
+        back = findViewById(R.id.buttonAddMealBackDetail);
+        spinnerCategory = findViewById(R.id.spinnerCategoryDetail);
+        status = findViewById(R.id.switchStatusDetail);
     }
 
-    private void setValue() {
+    private void setValueForSpinner(){
         categoriesName = new ArrayList<>();
         CategoryDBHelper categoryDBHelper = CategoryDBHelper.getInstance(getApplicationContext());
         categoryDBHelper.open();
@@ -81,13 +85,34 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
         categoryDBHelper.close();
     }
 
-    private void setEvent() {
+    private void setValueForMeal() {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, categoriesName);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(adapter);
         spinnerCategory.setOnItemSelectedListener(this);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        Long pickedId = Long.valueOf(preferences.getString(getString(R.string.pickedId), null));
+        mealEdit = mealDBHelper.getMealById(pickedId);
+
+        edMealName.setText(mealEdit.getName());
+        edMealDes.setText(mealEdit.getDescription());
+        int index = categoriesName.indexOf(mealEdit.getCategoryName());
+        spinnerCategory.setSelection(index);
+        if (mealEdit.getStatus().equals(1)){
+            status.setChecked(true);
+        }else{
+            status.setChecked(false);
+        }
+        imageView.setImageBitmap(mealEdit.getImage());
+
+    }
+
+    private void setEvent(){
+
+
 
         chooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,38 +121,14 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
             }
         });
 
-        add.setOnClickListener(new View.OnClickListener() {
+        save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String mealName = edMealName.getText().toString();
-                String mealDes = edMealDes.getText().toString();
-                boolean statusMeal = status.isChecked();
 
-                if (!mealName.isEmpty() && !mealDes.isEmpty() && !categoryChoose.isEmpty() && imageAdd != null && imageAdd.length > 0) {
-                    MealDBHelper mealDBHelper = MealDBHelper.getInstance(getApplicationContext());
-                    mealDBHelper.open();
-                    Integer mealStatus = statusMeal ? 1 : 0;
-                    boolean check = mealDBHelper.saveMeal(new Meal(mealName, mealDes, mealStatus, categoryChoose, imageAdd));
-                    if (check) {
-                        setDefaultValueAndNotification();
-                    } else {
-                        Toast.makeText(getApplicationContext(), R.string.occurred, Toast.LENGTH_LONG).show();
-                    }
-                    mealDBHelper.close();
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.please_fill_all, Toast.LENGTH_LONG).show();
-
-                }
             }
         });
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
+        mealDBHelper.close();
     }
 
     private void pickImageFromGallery() {
@@ -163,7 +164,7 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
             Bitmap bitmap = bitmapDrawable.getBitmap();
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            imageAdd = stream.toByteArray();
+            imageSave = stream.toByteArray();
             // ByteArrayInputStream bis = new ByteArrayInputStream(imageInByte);
 
         }
@@ -176,14 +177,6 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
-    private void setDefaultValueAndNotification(){
-        edMealName.setText("");
-        edMealDes.setText("");
-        imageView.setImageResource(R.mipmap.ic_launcher);
-        Toast.makeText(getApplicationContext(), "Add meal successfully", Toast.LENGTH_LONG).show();
 
     }
 }

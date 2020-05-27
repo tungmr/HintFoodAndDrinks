@@ -40,9 +40,10 @@
     <string name="incorrect_info_login">Incorrect login information</string>
     <string name="preference_file_key">com.tungmr.hintfoodandrinks</string>
 
+<!--    shared key-->
     <string name="usernameKey">username</string>
     <string name="emailKey">email</string>
-
+    <string name="pickedId">pickedId</string>
 
     <!--    change password-->
     <string name="user_profile">User profile</string>
@@ -67,6 +68,9 @@
     <string name="meal_image">Image</string>
     <string name="choose_image">Choose an image</string>
     <string name="list_meal">List Meals</string>
+
+    <string name="save">Save</string>
+    <string name="meal_detail">Meal detail</string>
 
 
 </resources>

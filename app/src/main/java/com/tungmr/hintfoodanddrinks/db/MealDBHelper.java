@@ -57,11 +57,11 @@ public class MealDBHelper extends DatabaseAccess {
         return meals;
     }
 
-    public List<Meal> getAllMeal(Integer status) {
+    public List<Meal> getAllMeal() {
         List<Meal> meals = new ArrayList<>();
 
-        String sql = "SELECT * FROM " + CoreConstants.TABLE_MEAL + " WHERE " + CoreConstants.TABLE_MEAL_STATUS + "=? ";
-        cursor = sqLiteDatabase.rawQuery(sql, new String[]{ String.valueOf(status)});
+        String sql = "SELECT * FROM " + CoreConstants.TABLE_MEAL;
+        cursor = sqLiteDatabase.rawQuery(sql, null);
         while (cursor.moveToNext()) {
             Meal meal = new Meal();
             meal.setMealId((long) cursor.getInt(0));
@@ -70,11 +70,40 @@ public class MealDBHelper extends DatabaseAccess {
             meal.setCategoryName(cursor.getString(3));
             meal.setImageArray(cursor.getBlob(4));
             meal.setStatus(cursor.getInt(5));
-            meal.setImage(DBImageUtils.getImage(meal.getImageArray()));
+            if (meal.getImageArray() != null && meal.getImageArray().length > 0)
+                meal.setImage(DBImageUtils.getImage(meal.getImageArray()));
             meals.add(meal);
         }
 
         return meals;
+    }
+
+    public Meal getMealById(Long mealId) {
+        String sql = "SELECT * FROM " + CoreConstants.TABLE_MEAL + " WHERE " + CoreConstants.TABLE_MEAL_COLUMN_ID + "=?";
+        cursor = sqLiteDatabase.rawQuery(sql, new String[]{String.valueOf(mealId)});
+        Meal meal = new Meal();
+        while (cursor.moveToNext()) {
+            meal.setMealId((long) cursor.getInt(0));
+            meal.setName(cursor.getString(1));
+            meal.setDescription(cursor.getString(2));
+            meal.setCategoryName(cursor.getString(3));
+            meal.setImageArray(cursor.getBlob(4));
+            meal.setStatus(cursor.getInt(5));
+            meal.setImage(DBImageUtils.getImage(meal.getImageArray()));
+        }
+        return meal;
+    }
+
+    public boolean editMeal(Meal meal) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CoreConstants.TABLE_MEAL_COLUMN_NAME, meal.getName());
+        contentValues.put(CoreConstants.TABLE_MEAL_DESCRIPTION, meal.getDescription());
+        contentValues.put(CoreConstants.TABLE_MEAL_CATEGORY_NAME, meal.getCategoryName());
+        contentValues.put(CoreConstants.TABLE_MEAL_IMAGE, meal.getImageArray());
+        contentValues.put(CoreConstants.TABLE_MEAL_STATUS, meal.getStatus());
+        long check = sqLiteDatabase.update(CoreConstants.TABLE_MEAL, contentValues, CoreConstants.TABLE_MEAL_COLUMN_ID + "=?", new String[]{String.valueOf(meal.getMealId())});
+        return check != -1;
+
     }
 
 
