@@ -1,5 +1,6 @@
 package com.tungmr.hintfoodanddrinks.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,9 +12,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.tungmr.hintfoodanddrinks.R;
+
+import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
 
@@ -56,13 +60,32 @@ public class ProfileFragment extends Fragment {
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences mySPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                SharedPreferences.Editor editor = mySPrefs.edit();
-                editor.remove(getString(R.string.emailKey));
-                editor.remove(getString(R.string.usernameKey));
-                editor.apply();
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+                builder.setTitle("Notification");
+                builder.setMessage(getString(R.string.ask_logout));
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences mySPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        SharedPreferences.Editor editor = mySPrefs.edit();
+                        editor.remove(getString(R.string.emailKey));
+                        editor.remove(getString(R.string.usernameKey));
+                        editor.remove(getString(R.string.role));
+                        editor.apply();
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+
+
             }
         });
 

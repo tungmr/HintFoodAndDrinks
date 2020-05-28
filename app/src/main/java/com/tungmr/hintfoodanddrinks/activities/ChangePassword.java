@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +21,7 @@ import com.tungmr.hintfoodanddrinks.security.SHAHashing;
 public class ChangePassword extends AppCompatActivity {
 
     private EditText editTextEmail, editTextUsername, editTextOldPassword, editTextNewPassword, editTextReNewPassword;
-    private Button confirm, cancel;
+    private Button confirm;
 
     private String email, username;
 
@@ -40,10 +41,17 @@ public class ChangePassword extends AppCompatActivity {
         editTextNewPassword = findViewById(R.id.editTextChangeNewPassword);
         editTextReNewPassword = findViewById(R.id.editTextChangeNewRePassword);
         confirm = findViewById(R.id.buttonConfirmChangePassword);
-        cancel = findViewById(R.id.buttonCancelChangePassword);
     }
 
     private void setEvent() {
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setTitle("Change password");
+        }
+
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         username = preferences.getString(getString(R.string.usernameKey), "Username");
         email = preferences.getString(getString(R.string.emailKey), "contact@tungmr.com");
@@ -102,13 +110,13 @@ public class ChangePassword extends AppCompatActivity {
 
             }
         });
+    }
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

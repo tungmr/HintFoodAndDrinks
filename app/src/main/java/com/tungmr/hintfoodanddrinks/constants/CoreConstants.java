@@ -44,6 +44,14 @@ public class CoreConstants {
     public static final String TABLE_MEAL_STATUS = "status";
     public static final String TABLE_MEAL_CATEGORY_NAME = "categoryName";
 
+    /**
+     * Meals
+     * */
+    public static final String BREAKFAST = "Breakfast";
+    public static final String LUNCH = "Lunch";
+    public static final String DINNER = "Dinner";
+
+
 
 
 }

@@ -2,8 +2,12 @@ package com.tungmr.hintfoodanddrinks.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,9 +19,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.tungmr.hintfoodanddrinks.R;
+import com.tungmr.hintfoodanddrinks.constants.CoreConstants;
 import com.tungmr.hintfoodanddrinks.db.CategoryDBHelper;
 
 import java.util.ArrayList;
@@ -32,12 +39,13 @@ public class HomeFragment extends Fragment {
 
     private int[] images = {R.drawable.food, R.drawable.food2, R.drawable.food3};
 
+
     private View mView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       // super.onCreateView(inflater, container, savedInstanceState);
+        // super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         this.mView = view;
@@ -50,24 +58,44 @@ public class HomeFragment extends Fragment {
 
     private void setControl() {
         listView = mView.findViewById(R.id.listViewHomePage);
-
     }
 
     private void setEvent() {
+
+
+
+
         MyCategoryAdapter myCategoryAdapter = new MyCategoryAdapter(getActivity(), categoriesName, categoryIntroductionTexts, images);
         listView.setAdapter(myCategoryAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                /**
+                 * Breakfast
+                 * */
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences.Editor editor = preferences.edit();
                 if (position == 0) {
-                    Toast.makeText(getActivity(), "Breakfast", Toast.LENGTH_LONG).show();
+                    editor.putString(getString(R.string.categoryPicked), CoreConstants.BREAKFAST);
                 }
+                /**
+                 * Lunch
+                 * */
                 if (position == 1) {
-                    Toast.makeText(getActivity(), "Lunch", Toast.LENGTH_LONG).show();
+                    editor.putString(getString(R.string.categoryPicked), CoreConstants.LUNCH);
+
                 }
+                /**
+                 * Dinner
+                 * */
                 if (position == 2) {
-                    Toast.makeText(getActivity(), "Dinner", Toast.LENGTH_LONG).show();
+                    editor.putString(getString(R.string.categoryPicked), CoreConstants.DINNER);
+
                 }
+                editor.commit();
+                Intent intent = new Intent(getActivity(), AdminViewMeal.class);
+                startActivity(intent);
+
             }
         });
     }
@@ -113,5 +141,15 @@ public class HomeFragment extends Fragment {
 
             return row;
         }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Objects.requireNonNull(getActivity()).finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

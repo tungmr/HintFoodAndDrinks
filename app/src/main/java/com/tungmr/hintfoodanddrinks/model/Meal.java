@@ -21,11 +21,21 @@ public class Meal {
     public Meal(String name, String description, Integer status, String categoryName, byte[] imageArray) {
         this.name = name;
         this.description = description;
-
         this.status = status;
         this.categoryName = categoryName;
         this.imageArray = imageArray;
     }
+
+
+    public Meal(Long mealId,String name, String description, Integer status, String categoryName, byte[] imageArray) {
+        this.mealId = mealId;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.categoryName = categoryName;
+        this.imageArray = imageArray;
+    }
+
 
     public Long getMealId() {
         return mealId;

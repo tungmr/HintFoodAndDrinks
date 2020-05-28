@@ -2,7 +2,7 @@
     <string name="app_name">Hint Food And Drinks</string>
 
     <string name="title">Hint Food and Drinks</string>
-    <string name="email">Email</string>
+    <string name="email">Username</string>
     <string name="password">Password</string>
     <string name="name">Your name</string>
     <string name="confirmPassword">Confirm password</string>
@@ -39,11 +39,14 @@
     <string name="login_success">Login successfully</string>
     <string name="incorrect_info_login">Incorrect login information</string>
     <string name="preference_file_key">com.tungmr.hintfoodandrinks</string>
+    <string name="save_success">Edit meal successfully</string>
 
-<!--    shared key-->
+    <!--    shared key-->
     <string name="usernameKey">username</string>
     <string name="emailKey">email</string>
     <string name="pickedId">pickedId</string>
+    <string name="role">role</string>
+    <string name="categoryPicked">categoryPicked</string>
 
     <!--    change password-->
     <string name="user_profile">User profile</string>
@@ -71,6 +74,10 @@
 
     <string name="save">Save</string>
     <string name="meal_detail">Meal detail</string>
+
+
+
+    <string name="ask_logout">Do you want to sign out?</string>
 
 
 </resources>

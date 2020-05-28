@@ -4,13 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,17 +23,15 @@ import android.widget.Toast;
 import com.tungmr.hintfoodanddrinks.R;
 import com.tungmr.hintfoodanddrinks.db.CategoryDBHelper;
 import com.tungmr.hintfoodanddrinks.db.MealDBHelper;
-import com.tungmr.hintfoodanddrinks.model.Category;
 import com.tungmr.hintfoodanddrinks.model.Meal;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddMealActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private Button chooseImage, add, back;
+    private Button chooseImage, add;
     private ImageView imageView;
 
     private static final int IMAGE_PICK_CODE = 1000;
@@ -68,7 +65,6 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
         chooseImage = findViewById(R.id.buttonChooseAnImage);
         imageView = findViewById(R.id.imageViewAfterChooseImage);
         add = findViewById(R.id.buttonAddNewMeal);
-        back = findViewById(R.id.buttonAddMealBack);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         status = findViewById(R.id.switchStatus);
     }
@@ -82,6 +78,12 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
     }
 
     private void setEvent() {
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+                getSupportActionBar().setTitle("Add new meal");
+        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, categoriesName);
 
@@ -121,12 +123,7 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
             }
         });
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+
 
     }
 
@@ -185,5 +182,13 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
         imageView.setImageResource(R.mipmap.ic_launcher);
         Toast.makeText(getApplicationContext(), "Add meal successfully", Toast.LENGTH_LONG).show();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.ViewAMeal"></activity>
+        <activity android:name=".activities.DetailMeal" />
+        <activity android:name=".activities.ViewAMeal" />
         <activity android:name=".activities.AdminViewMeal" />
         <activity android:name=".activities.AddMealActivity" />
         <activity android:name=".activities.AdminActivity" />

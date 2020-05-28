@@ -51,10 +51,10 @@ public class LoginDBHelper extends DatabaseAccess {
         String sql = "SELECT * FROM " + CoreConstants.TABLE_USER + " WHERE " + CoreConstants.TABLE_USER_COLUMN_EMAIL + "=? AND " + CoreConstants.TABLE_USER_COLUMN_PASSWORD + "=? ";
         cursor = sqLiteDatabase.rawQuery(sql, new String[]{email, passwordHash});
         while (cursor.moveToNext()) {
-            user.setEmail(cursor.getString(0));
-            user.setName(cursor.getString(1));
-            user.setPassword(cursor.getString(2));
-            user.setRole(cursor.getString(3));
+            user.setEmail(cursor.getString(cursor.getColumnIndex(CoreConstants.TABLE_USER_COLUMN_EMAIL)));
+            user.setName(cursor.getString(cursor.getColumnIndex(CoreConstants.TABLE_USER_COLUMN_NAME)));
+            user.setPassword(cursor.getString(cursor.getColumnIndex(CoreConstants.TABLE_USER_COLUMN_PASSWORD)));
+            user.setRole(cursor.getString(cursor.getColumnIndex(CoreConstants.TABLE_USER_COLUMN_ROLE)));
         }
         return user;
     }
@@ -64,10 +64,10 @@ public class LoginDBHelper extends DatabaseAccess {
         String sql = "SELECT * FROM " + CoreConstants.TABLE_USER + " WHERE " + CoreConstants.TABLE_USER_COLUMN_EMAIL + "=? ";
         cursor = sqLiteDatabase.rawQuery(sql, new String[]{email});
         while (cursor.moveToNext()) {
-            user.setEmail(cursor.getString(0));
-            user.setName(cursor.getString(1));
-            user.setPassword(cursor.getString(2));
-            user.setRole(cursor.getString(3));
+            user.setEmail(cursor.getString(cursor.getColumnIndex(CoreConstants.TABLE_USER_COLUMN_EMAIL)));
+            user.setName(cursor.getString(cursor.getColumnIndex(CoreConstants.TABLE_USER_COLUMN_NAME)));
+            user.setPassword(cursor.getString(cursor.getColumnIndex(CoreConstants.TABLE_USER_COLUMN_PASSWORD)));
+            user.setRole(cursor.getString(cursor.getColumnIndex(CoreConstants.TABLE_USER_COLUMN_ROLE)));
         }
         return user;
     }

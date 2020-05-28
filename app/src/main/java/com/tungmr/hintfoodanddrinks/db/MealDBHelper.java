@@ -106,5 +106,10 @@ public class MealDBHelper extends DatabaseAccess {
 
     }
 
+    public  boolean delete(){
+        return sqLiteDatabase.delete(CoreConstants.TABLE_MEAL, null,null) > 0;
+
+    }
+
 
 }
