@@ -27,7 +27,7 @@
 
     <string name="sign_out">Sign out</string>
     <string name="profile">Profile</string>
-    <string name="change_password">Change password</string>
+    <string name="change_password">Change information</string>
 
     <string name="home">Home page</string>
 
@@ -47,6 +47,11 @@
     <string name="pickedId">pickedId</string>
     <string name="role">role</string>
     <string name="categoryPicked">categoryPicked</string>
+    <string name="statusUser">statusUser</string>
+    <string name="heightKey">heightKey</string>
+    <string name="weightKey">weightKey</string>
+    <string name="genderKey">genderKey</string>
+    <string name="bmiKey">bmiKey</string>
 
     <!--    change password-->
     <string name="user_profile">User profile</string>
@@ -79,5 +84,19 @@
 
     <string name="ask_logout">Do you want to sign out?</string>
 
+    <string name="gender">Gender</string>
+    <string name="your_height">Your height (CM) </string>
+    <string name="your_weight">Your weight (KG) </string>
+    <string name="your_BMI">BMI</string>
+
+    <string name="nutrients">Nutrients</string>
+    <string name="protein">Protein (G)</string>
+    <string name="fat">Fat (G)</string>
+    <string name="carbohydrate">Carbohydrate (G)</string>
+    <string name="minerals">Minerals (G)</string>
+    <string name="vitamins">Vitamins (G)</string>
+    <string name="calories">Calories (KCal) </string>
+
+    <string name="hint_of">Hint of</string>
 
 </resources>

@@ -16,12 +16,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.tungmr.hintfoodanddrinks.R;
+import com.tungmr.hintfoodanddrinks.db.LoginDBHelper;
+import com.tungmr.hintfoodanddrinks.model.User;
 
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
 
-    private TextView username, email, changePassword, signOut;
+    private TextView username, email, changePassword, signOut, tvGender, tvHeight, tvWeight, tvBMI;
 
     private View mView;
 
@@ -41,14 +44,28 @@ public class ProfileFragment extends Fragment {
         email = mView.findViewById(R.id.textViewProfileEmail);
         changePassword = mView.findViewById(R.id.textViewProfileChangePassword);
         signOut = mView.findViewById(R.id.textViewProfileSignOut);
+        tvGender = mView.findViewById(R.id.textViewGenderUserProfile);
+        tvHeight = mView.findViewById(R.id.textViewHeightUserProfile);
+        tvWeight = mView.findViewById(R.id.textViewWeightUserProfile);
+        tvBMI = mView.findViewById(R.id.textViewBMIUserProfile);
+
     }
 
     private void setEvent() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        username.setText(preferences.getString(getString(R.string.usernameKey), "Username"));
+        String user = preferences.getString(getString(R.string.usernameKey), "Username");
+        username.setText(user);
         email.setText(preferences.getString(getString(R.string.emailKey), "contact@tungmr.com"));
+        LoginDBHelper loginDBHelper = LoginDBHelper.getInstance(getActivity());
+        loginDBHelper.open();
+        User userProfile = loginDBHelper.findUserByEmail(user);
+        tvGender.setText(String.valueOf(userProfile.getGender()));
+        tvHeight.setText(String.valueOf(userProfile.getHeight()));
+        tvWeight.setText(String.valueOf(userProfile.getWeight()));
+        tvBMI.setText(String.format("%.2f",userProfile.getBMI()));
 
+        loginDBHelper.close();
         changePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

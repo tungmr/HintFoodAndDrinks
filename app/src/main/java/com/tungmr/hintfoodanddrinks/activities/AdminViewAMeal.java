@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tungmr.hintfoodanddrinks.R;
@@ -31,7 +32,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewAMeal extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AdminViewAMeal extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
 
     private Button chooseImage, save;
@@ -42,9 +43,10 @@ public class ViewAMeal extends AppCompatActivity implements AdapterView.OnItemSe
 
     private byte[] imageSave;
 
-    private EditText edMealName, edMealDes;
+    private EditText edMealName, edMealDes, edProtein, edMinerals, edFat, edVitamins, edCarbohydrate;
     private Spinner spinnerCategory;
     private Switch status;
+    private TextView tvCalories;
 
     private List<String> categoriesName;
 
@@ -75,6 +77,12 @@ public class ViewAMeal extends AppCompatActivity implements AdapterView.OnItemSe
         save = findViewById(R.id.buttonSaveMealDetail);
         spinnerCategory = findViewById(R.id.spinnerCategoryDetail);
         status = findViewById(R.id.switchStatusDetail);
+        edProtein = findViewById(R.id.editTextProtein);
+        edFat = findViewById(R.id.editTextFat);
+        edMinerals = findViewById(R.id.editTextMinerals);
+        edVitamins = findViewById(R.id.editTextVitamins);
+        edCarbohydrate = findViewById(R.id.editTextCarbohydrate);
+        tvCalories = findViewById(R.id.textViewCaloriesEdit);
     }
 
     private void setValueForSpinner() {
@@ -99,6 +107,12 @@ public class ViewAMeal extends AppCompatActivity implements AdapterView.OnItemSe
         imageSave = mealEdit.getImageArray();
         edMealName.setText(mealEdit.getName());
         edMealDes.setText(mealEdit.getDescription());
+        edProtein.setText(String.valueOf(mealEdit.getProtein()));
+        edFat.setText(String.valueOf(mealEdit.getFat()));
+        edMinerals.setText(String.valueOf(mealEdit.getMinerals()));
+        edVitamins.setText(String.valueOf(mealEdit.getVitamins()));
+        edCarbohydrate.setText(String.valueOf(mealEdit.getCarbohydrate()));
+        tvCalories.setText(String.format("%.2f", mealEdit.getTotalCalories()));
         int index = categoriesName.indexOf(mealEdit.getCategoryName());
         spinnerCategory.setSelection(index);
         if (mealEdit.getStatus().equals(1)) {
@@ -131,14 +145,49 @@ public class ViewAMeal extends AppCompatActivity implements AdapterView.OnItemSe
                 String mealName = edMealName.getText().toString();
                 String mealDes = edMealDes.getText().toString();
                 boolean statusMeal = status.isChecked();
+                Double protein=null, fat = null, minerals=null, carbohydrate=null;
+                try {
+                     protein = Double.valueOf(edProtein.getText().toString());
+                } catch (NumberFormatException e) {
+                    edProtein.requestFocus();
+                    edProtein.setError("Just a number");
+                    return;
+                }
+                try {
+                    fat = Double.valueOf(edFat.getText().toString());
+                } catch (NumberFormatException e) {
+                    edFat.requestFocus();
+                    edFat.setError("Just a number");
+                    return;
+                }
+                try {
+                    minerals = Double.valueOf(edMinerals.getText().toString());
+                } catch (NumberFormatException e) {
+                    edMinerals.requestFocus();
+                    edMinerals.setError("Just a number");
+                    return;
+                }
+                try {
+                    carbohydrate = Double.valueOf(edCarbohydrate.getText().toString());
+                } catch (NumberFormatException e) {
+                    edCarbohydrate.requestFocus();
+                    edCarbohydrate.setError("Just a number");
+                    return;
+                }
+
 
                 if (!mealName.isEmpty() && !mealDes.isEmpty() && !categoryChoose.isEmpty() && imageSave != null && imageSave.length > 0) {
                     Integer mealStatus = statusMeal ? 1 : 0;
+                    Meal mealSave = new Meal(mealEdit.getMealId(), mealName, mealDes, mealStatus, categoryChoose, imageSave);
+                    mealSave.setProtein(protein);
+                    mealSave.setFat(fat);
+                    mealSave.setMinerals(minerals);
+                    mealSave.setCarbohydrate(carbohydrate);
 
-                    boolean check = mealDBHelper.editMeal(new Meal(mealEdit.getMealId(), mealName, mealDes, mealStatus, categoryChoose, imageSave));
+                    boolean check = mealDBHelper.editMeal(mealSave);
                     if (check) {
                         Toast.makeText(getApplicationContext(), R.string.save_success, Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(ViewAMeal.this, AdminViewMeal.class);
+                        Intent intent = new Intent(AdminViewAMeal.this, AdminViewMeal.class);
                         startActivity(intent);
 
                     } else {

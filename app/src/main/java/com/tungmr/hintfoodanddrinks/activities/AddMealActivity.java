@@ -39,7 +39,8 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
 
     private byte[] imageAdd;
 
-    private EditText edMealName, edMealDes;
+    private EditText edMealName, edMealDes, edProtein, edMinerals, edFat, edVitamins, edCarbohydrate;
+    ;
     private Spinner spinnerCategory;
     private Switch status;
 
@@ -67,6 +68,12 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
         add = findViewById(R.id.buttonAddNewMeal);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         status = findViewById(R.id.switchStatus);
+
+        edProtein = findViewById(R.id.editTextProteinAdd);
+        edVitamins = findViewById(R.id.editTextVitaminsAdd);
+        edFat = findViewById(R.id.editTextFatAdd);
+        edCarbohydrate = findViewById(R.id.editTextCarbohydrateAdd);
+        edMinerals = findViewById(R.id.editTextMineralsAdd);
     }
 
     private void setValue() {
@@ -82,7 +89,7 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
-                getSupportActionBar().setTitle("Add new meal");
+            getSupportActionBar().setTitle("Add new meal");
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, categoriesName);
@@ -104,12 +111,51 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
                 String mealName = edMealName.getText().toString();
                 String mealDes = edMealDes.getText().toString();
                 boolean statusMeal = status.isChecked();
+                Double protein, vitamins, fat, carbohydrate, minerals;
+
+                try {
+                    protein = Double.valueOf(edProtein.getText().toString());
+                } catch (NumberFormatException e) {
+                    edProtein.setError("This field only accept numeric value");
+                    edProtein.requestFocus();
+                    return;
+                }
+                try {
+                    fat = Double.valueOf(edFat.getText().toString());
+                } catch (NumberFormatException e) {
+                    edFat.setError("This field only accept numeric value");
+                    edFat.requestFocus();
+                    return;
+                }
+                try {
+                    vitamins = Double.valueOf(edVitamins.getText().toString());
+                } catch (NumberFormatException e) {
+                    edVitamins.setError("This field only accept numeric value");
+                    edVitamins.requestFocus();
+                    return;
+                }
+                try {
+                    carbohydrate = Double.valueOf(edCarbohydrate.getText().toString());
+                } catch (NumberFormatException e) {
+                    edCarbohydrate.setError("This field only accept numeric value");
+                    edCarbohydrate.requestFocus();
+                    return;
+                }
+                try {
+                    minerals = Double.valueOf(edMinerals.getText().toString());
+                } catch (NumberFormatException e) {
+                    edMinerals.setError("This field only accept numeric value");
+                    edMinerals.requestFocus();
+                    return;
+                }
 
                 if (!mealName.isEmpty() && !mealDes.isEmpty() && !categoryChoose.isEmpty() && imageAdd != null && imageAdd.length > 0) {
                     MealDBHelper mealDBHelper = MealDBHelper.getInstance(getApplicationContext());
                     mealDBHelper.open();
                     Integer mealStatus = statusMeal ? 1 : 0;
-                    boolean check = mealDBHelper.saveMeal(new Meal(mealName, mealDes, mealStatus, categoryChoose, imageAdd));
+                    boolean check = mealDBHelper.saveMeal(new Meal(mealName, mealDes, mealStatus, categoryChoose, imageAdd, protein, carbohydrate, fat, vitamins, minerals));
+
+
                     if (check) {
                         setDefaultValueAndNotification();
                     } else {
@@ -122,7 +168,6 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
                 }
             }
         });
-
 
 
     }
@@ -176,7 +221,7 @@ public class AddMealActivity extends AppCompatActivity implements AdapterView.On
 
     }
 
-    private void setDefaultValueAndNotification(){
+    private void setDefaultValueAndNotification() {
         edMealName.setText("");
         edMealDes.setText("");
         imageView.setImageResource(R.mipmap.ic_launcher);

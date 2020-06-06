@@ -1,9 +1,7 @@
 package com.tungmr.hintfoodanddrinks.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
-import android.app.role.RoleManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,7 +18,6 @@ import com.tungmr.hintfoodanddrinks.constants.CoreConstants;
 import com.tungmr.hintfoodanddrinks.db.MealDBHelper;
 import com.tungmr.hintfoodanddrinks.model.Meal;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AdminViewMeal extends AppCompatActivity {
@@ -51,7 +48,6 @@ public class AdminViewMeal extends AppCompatActivity {
     }
 
     private void setControl() {
-//        textViewTitle = findViewById(R.id.textViewTitleMeal);
         gridView = findViewById(R.id.girdViewMeals);
     }
 
@@ -63,8 +59,12 @@ public class AdminViewMeal extends AppCompatActivity {
         } else if (ROLE.equals(CoreConstants.ROLE_USER)) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             category = preferences.getString(getString(R.string.categoryPicked), null);
-            //  textViewTitle.setText(category + " meal");
-            meals = mealDBHelper.getAllMealByCategory(category, 1);
+            String gender  = preferences.getString(getString(R.string.genderKey), null);
+            Double BMI = Double.valueOf(preferences.getString(getString(R.string.bmiKey), null));
+            if (BMI == null || BMI.equals(Double.NaN )){
+                BMI = 0d;
+            }
+            meals = mealDBHelper.getAllMealByCategoryBMIAndGender(category, 1, BMI, gender);
         }
         mealDBHelper.close();
 
@@ -93,7 +93,7 @@ public class AdminViewMeal extends AppCompatActivity {
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(getString(R.string.pickedId), String.valueOf(pickedId));
                     editor.commit();
-                    Intent intent = new Intent(AdminViewMeal.this, ViewAMeal.class);
+                    Intent intent = new Intent(AdminViewMeal.this, AdminViewAMeal.class);
                     startActivity(intent);
 
                 }

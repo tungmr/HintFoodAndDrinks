@@ -75,6 +75,14 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString(getString(R.string.usernameKey), checkUser.getName());
                         editor.putString(getString(R.string.emailKey), checkUser.getEmail());
                         editor.putString(getString(R.string.role), checkUser.getRole());
+                        editor.putString(getString(R.string.statusUser), checkUser.getStatus());
+                        if (checkUser.getBMI().equals(Double.NaN))
+                            checkUser.setBMI(0d);
+                        if (checkUser.getBMI() != null)
+                            editor.putString(getString(R.string.bmiKey), String.valueOf(checkUser.getBMI()));
+                        if (checkUser.getStatus() != null) {
+                            editor.putString(getString(R.string.statusUser), checkUser.getStatus());
+                        }
                         editor.commit();
                         Toast.makeText(getApplicationContext(), R.string.login_success, Toast.LENGTH_LONG).show();
 
@@ -100,9 +108,9 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)){
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-            homeIntent.addCategory( Intent.CATEGORY_HOME );
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
             homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(homeIntent);
         }

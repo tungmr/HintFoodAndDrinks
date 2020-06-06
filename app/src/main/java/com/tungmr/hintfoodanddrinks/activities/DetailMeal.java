@@ -19,7 +19,7 @@ import com.tungmr.hintfoodanddrinks.model.Meal;
 
 public class DetailMeal extends AppCompatActivity {
 
-    private TextView tvMealName, tvMealDes, tvMealCat;
+    private TextView tvMealName, tvMealDes, tvMealCat, tvProtein, tvFat, tvMinerals, tvVitamins, tvCarbohydrate, tvCalories;
     private ImageView imageView;
 
     private Meal mealView;
@@ -34,16 +34,22 @@ public class DetailMeal extends AppCompatActivity {
 
     }
 
-    private void setControl(){
+    private void setControl() {
         tvMealName = findViewById(R.id.textViewDetailMealName);
         tvMealDes = findViewById(R.id.textViewDetailMealDes);
         tvMealCat = findViewById(R.id.textViewDetailMealCategory);
         imageView = findViewById(R.id.imageViewDetailMealImage);
+        tvProtein = findViewById(R.id.textViewDetailProtein);
+        tvFat = findViewById(R.id.textViewDetailFat);
+        tvMinerals = findViewById(R.id.textViewDetailMinerals);
+        tvVitamins = findViewById(R.id.textViewDetailVitamins);
+        tvCarbohydrate = findViewById(R.id.textViewDetailCarbohydrate);
+        tvCalories = findViewById(R.id.textViewCaloriesView);
 
     }
 
-    private  void setEvent(){
-        if (getSupportActionBar() != null){
+    private void setEvent() {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setTitle("Details of a meal");
@@ -52,7 +58,7 @@ public class DetailMeal extends AppCompatActivity {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String mealPickedId = preferences.getString(getString(R.string.pickedId), null);
-        if (mealPickedId != null){
+        if (mealPickedId != null) {
             MealDBHelper mealDBHelper = MealDBHelper.getInstance(getApplicationContext());
             mealDBHelper.open();
             mealView = mealDBHelper.getMealById(Long.valueOf(mealPickedId));
@@ -60,6 +66,12 @@ public class DetailMeal extends AppCompatActivity {
             tvMealDes.setText(mealView.getDescription());
             tvMealCat.setText(mealView.getCategoryName());
             imageView.setImageBitmap(mealView.getImage());
+            tvProtein.setText(String.valueOf(mealView.getProtein()));
+            tvFat.setText(String.valueOf(mealView.getFat()));
+            tvCarbohydrate.setText(String.valueOf(mealView.getCarbohydrate()));
+            tvVitamins.setText(String.valueOf(mealView.getVitamins()));
+            tvMinerals.setText(String.valueOf(mealView.getMinerals()));
+            tvCalories.setText(String.format("%.2f", mealView.getTotalCalories()));
             mealDBHelper.close();
         }
 

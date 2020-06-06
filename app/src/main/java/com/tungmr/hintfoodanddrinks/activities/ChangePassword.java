@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,11 +20,17 @@ import com.tungmr.hintfoodanddrinks.R;
 import com.tungmr.hintfoodanddrinks.db.LoginDBHelper;
 import com.tungmr.hintfoodanddrinks.model.User;
 import com.tungmr.hintfoodanddrinks.security.SHAHashing;
+import com.tungmr.hintfoodanddrinks.utils.BMIUtils;
 
-public class ChangePassword extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
 
-    private EditText editTextEmail, editTextUsername, editTextOldPassword, editTextNewPassword, editTextReNewPassword;
+public class ChangePassword extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+
+    private EditText editTextEmail, editTextUsername, editTextOldPassword, editTextNewPassword, editTextReNewPassword, edWeight, edHeight;
     private Button confirm;
+    private Spinner spinnerGender;
+    private List<String> genders;
 
     private String email, username;
 
@@ -41,14 +50,20 @@ public class ChangePassword extends AppCompatActivity {
         editTextNewPassword = findViewById(R.id.editTextChangeNewPassword);
         editTextReNewPassword = findViewById(R.id.editTextChangeNewRePassword);
         confirm = findViewById(R.id.buttonConfirmChangePassword);
+        spinnerGender = findViewById(R.id.spinnerGenderChange);
+        edWeight = findViewById(R.id.editTextChangeWeight);
+        edHeight = findViewById(R.id.editTextChangeHeight);
     }
 
     private void setEvent() {
+        genders = new ArrayList<>();
+        genders.add("Male");
+        genders.add("Female");
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setTitle("Change password");
+            getSupportActionBar().setTitle("Change information");
         }
 
 
@@ -57,6 +72,18 @@ public class ChangePassword extends AppCompatActivity {
         email = preferences.getString(getString(R.string.emailKey), "contact@tungmr.com");
         editTextEmail.setText(email);
         editTextUsername.setText(username);
+        LoginDBHelper loginDBHelper = LoginDBHelper.getInstance(getApplicationContext());
+        loginDBHelper.open();
+        User user = loginDBHelper.findUserByEmail(email);
+        loginDBHelper.close();
+        edWeight.setText(String.valueOf(user.getWeight()));
+        edHeight.setText(String.valueOf(user.getHeight()));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, genders);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerGender.setAdapter(adapter);
+        spinnerGender.setOnItemSelectedListener(this);
+        spinnerGender.setSelection(genders.indexOf(user.getGender()));
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +92,21 @@ public class ChangePassword extends AppCompatActivity {
                 String oldPassword = editTextOldPassword.getText().toString();
                 String newPassword = editTextNewPassword.getText().toString();
                 String reNewPassword = editTextReNewPassword.getText().toString();
+                Integer height = 0, weight = 0;
+                try {
+                    weight = Integer.valueOf(edWeight.getText().toString());
+                } catch (NumberFormatException e) {
+                    edWeight.requestFocus();
+                    edWeight.setError("just a number");
+                    return;
+                }
+                try {
+                    height = Integer.valueOf(edHeight.getText().toString());
+                } catch (NumberFormatException e) {
+                    edHeight.requestFocus();
+                    edHeight.setError("just a number");
+                    return;
+                }
 
                 if (!username.isEmpty() && !oldPassword.isEmpty() && !newPassword.isEmpty() && !reNewPassword.isEmpty()) {
 
@@ -76,11 +118,15 @@ public class ChangePassword extends AppCompatActivity {
                         if (oldPasswordHash.equals(user.getPassword())) {
                             user.setName(username);
                             user.setPassword(SHAHashing.getSHAHash(newPassword));
+                            user.setWeight(weight);
+                            user.setHeight(height);
+                            user.setGender(spinnerGender.getSelectedItem().toString());
                             boolean check = loginDBHelper.editUser(user);
                             if (check) {
                                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                                 SharedPreferences.Editor editor = preferences.edit();
                                 editor.putString(getString(R.string.usernameKey), user.getName());
+                                editor.putString(getString(R.string.bmiKey), String.valueOf(BMIUtils.calculateBMI(height,weight)));
 
                                 View inflatedView = getLayoutInflater().inflate(R.layout.activity_main, null);
                                 NavigationView navigationView = inflatedView.findViewById(R.id.nav_view);
@@ -90,7 +136,7 @@ public class ChangePassword extends AppCompatActivity {
 
                                 editor.commit();
 
-                                Toast.makeText(getApplicationContext(), R.string.change_password_successfully, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Information was changed", Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(getApplicationContext(), R.string.occurred, Toast.LENGTH_LONG).show();
                             }
@@ -118,5 +164,15 @@ public class ChangePassword extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

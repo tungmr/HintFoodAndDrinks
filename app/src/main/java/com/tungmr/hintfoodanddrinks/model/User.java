@@ -8,6 +8,11 @@ public class User implements Serializable {
     private String name;
     private String password;
     private String role;
+    private Integer weight;
+    private Integer height;
+    private Double BMI;
+    private String status;
+    private String gender;
 
     public User() {
     }
@@ -49,5 +54,45 @@ public class User implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+
+    public Double getBMI() {
+        return BMI;
+    }
+
+    public void setBMI(Double BMI) {
+        this.BMI = BMI;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }
